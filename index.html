@@ -1,139 +1,192 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Escobar Auto Glass LLC</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Escobar Auto Glass LLC | Yuma, CO</title>
   <style>
-    body { font-family: Arial, sans-serif; background-color: #f9f9f9; margin: 0; padding: 0; text-align: center; }
-    header { background-color: darkblue; color: white; padding: 20px; }
-    section { padding: 20px; }
-    h1, h2 { margin: 10px 0; }
-    p { color: #555; font-size: 18px; }
-    button { background-color: darkblue; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; margin: 5px; }
-    button:hover { background-color: navy; }
-    .message-btn { background-color: green; margin-top: 10px; }
-    .message-btn:hover { background-color: darkgreen; }
-    form { margin-top: 20px; }
-    input, textarea, select { width: 80%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
-    iframe { border: 0; }
-    a.phone-link { color: darkblue; font-weight: bold; text-decoration: none; }
-    a.phone-link:hover { text-decoration: underline; }
-    .error { color: red; font-size: 14px; display: block; margin-top: -5px; margin-bottom: 10px; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; margin: 0; padding: 0; text-align: center; color: #333; }
+    header { background-color: #003366; color: white; padding: 30px 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    section { padding: 30px 15px; max-width: 800px; margin: auto; }
+    h1 { margin: 0; font-size: 2.2em; }
+    
+    /* Bigger, Dark Blue Headings as requested */
+    .highlight-heading { 
+      font-size: 2.6em; 
+      color: #001f3f; /* Deep Dark Blue */
+      font-weight: 800;
+      margin-bottom: 25px;
+      text-transform: capitalize;
+    }
+
+    .btn-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 20px; }
+    .btn { padding: 12px 25px; border: none; border-radius: 50px; cursor: pointer; font-size: 16px; font-weight: bold; text-decoration: none; color: white; transition: 0.3s; display: inline-flex; align-items: center; justify-content: center; }
+    .btn-sms { background-color: #25D366; } 
+    .btn-fb { background-color: #0084FF; } 
+    .btn-call { background-color: #003366; }
+    .btn:hover { opacity: 0.8; transform: translateY(-2px); }
+    
+    form { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: left; }
+    input, select, textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
     .hidden { display: none; }
-    details { margin: 10px 0; text-align: left; display: inline-block; width: 90%; }
-    summary { font-weight: bold; cursor: pointer; background-color: #eee; padding: 10px; border-radius: 5px; }
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-    th { background-color: #f0f0f0; }
-    #price-display { font-size: 20px; font-weight: bold; margin-top: 15px; }
+    #price-display { font-size: 24px; font-weight: bold; color: #003366; text-align: center; margin: 15px 0; border: 2px dashed #003366; padding: 15px; border-radius: 8px; }
+    .note { font-size: 0.85em; color: #666; font-style: italic; margin-top: -5px; }
   </style>
 </head>
 <body>
+
   <header>
     <h1>Escobar Auto Glass LLC</h1>
-    <p>Windshield Installation • Repairs • Tint • Detailing</p>
+    <p>Windshield Installation • Chip Repair • Car Wash • Detailing • Window Tint</p>
   </header>
 
-  <!-- Booking Form -->
   <section>
-    <h2>Quick Booking Form</h2>
-    <!-- Replace FORM_ID with your actual Google Form ID -->
-    <form id="bookingForm" action="https://docs.google.com/forms/d/e/YOUR_GOOGLE_FORM_ID/formResponse" method="POST" target="_blank">
-      <input type="text" name="entry.1111111111" placeholder="Your Name"><br>
-      <input type="text" id="contact" name="entry.2222222222" placeholder="Your Email or Phone Number" required><br>
-      <span id="contactError" class="error"></span>
+    <h2>Contact Us</h2>
+    <div class="btn-container">
+      <a href="tel:+19705349500" class="btn btn-call">📞 Call</a>
+      <a href="sms:+19705349500?&body=Hi Escobar Auto Glass, I'm interested in a quote for service!" class="btn btn-sms">💬 Text</a>
+      <a href="https://www.facebook.com/profile.php?id=100083192319444" target="_blank" class="btn btn-fb">🌀 Facebook</a>
+    </div>
+  </section>
 
-      <label for="service">Choose a service:</label>
-      <select id="service" name="entry.3333333333" onchange="showEstimate()" required>
-        <option value="">Select a service</option>
-        <option value="windshield">Windshield Installation</option>
-        <option value="repair">Windshield Repair</option>
-        <option value="tint">Window Tint</option>
-        <option value="ceramicTint">Ceramic Tint</option>
-        <option value="detailing">Car Wash & Detailing</option>
-        <option value="buff">Buff (Scratch Removal)</option>
-        <option value="semiDetailing">Semi Detailing</option>
-        <option value="tintRemoval">Tint Removal</option>
-        <option value="other">Other</option>
+  <!-- INSTANT QUOTE SECTION -->
+  <section>
+    <h2 class="highlight-heading">Fast FREE Quote</h2>
+    <div style="background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: left;">
+      <label>Service Needed</label>
+      <select id="service" onchange="updateFormLogic()" required>
+        <option value="">-- Select Service --</option>
+        <option value="Rock Chip Repair">Rock Chip Repair</option>
+        <option value="Windshield Replacement">Windshield Replacement</option>
+        <option value="Window Tint (Standard)">Window Tint (Standard)</option>
+        <option value="Ceramic Tint (Premium)">Ceramic Tint (Premium)</option>
+        <option value="Detailing: Simple Package">Detailing: Simple Package</option>
+        <option value="Detailing: Gold">Detailing: Gold</option>
+        <option value="Detailing: Platinum">Detailing: Platinum</option>
       </select>
 
-      <div id="windshieldFields" class="hidden">
-        <input type="text" name="entry.4444444444" placeholder="Vehicle Year"><br>
-        <input type="text" name="entry.5555555555" placeholder="Vehicle Make"><br>
-        <input type="text" name="entry.6666666666" placeholder="Vehicle Model"><br>
-        <input type="text" name="entry.7777777777" placeholder="Vehicle VIN (optional)"><br>
+      <div id="vehicleSection" class="hidden">
+        <label>Vehicle Size / Type</label>
+        <select id="vehicleType" onchange="calculatePrice()">
+          <option value="">-- Select Vehicle --</option>
+        </select>
       </div>
 
-      <p id="estimate"></p>
-
-      <div id="additionalDetails" class="hidden">
-        <textarea name="entry.8888888888" placeholder="Additional Details"></textarea><br>
+      <div id="chipSection" class="hidden">
+        <label>How many chips?</label>
+        <input type="number" id="chipCount" value="1" min="1" oninput="calculatePrice()">
       </div>
 
-      <button type="submit">Submit</button>
+      <div id="price-display" class="hidden">Estimated Total: $0.00</div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="highlight-heading">Come see us</h2>
+    <iframe 
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3069.123456789!2d-102.722!3d40.122!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x87654321abcdef%3A0x123456789abcdef!2sEscobar%20Auto%20Glass%20LLC%2C%20Yuma%2C%20CO!5e0!3m2!1sen!2sus!4v1700000000000"
+      width="100%" height="400" style="border:0; border-radius:15px;" allowfullscreen="" loading="lazy">
+    </iframe>
+    <p>📍 810 W. 8th Ave, Yuma CO 80759</p>
+  </section>
+
+  <!-- BOOKING SECTION -->
+  <section id="booking">
+    <h2 class="highlight-heading">Schedule an Appointment</h2>
+    <!-- FORMSPREE LINK CONNECTED BELOW -->
+    <form action="https://formspree.io/f/mvzwbrkg" method="POST">
+      <label>Name</label>
+      <input type="text" name="name" placeholder="Name" required>
+
+      <label>Contact</label>
+      <p class="note">Please provide at least one.</p>
+      <input type="email" name="email" id="custEmail" placeholder="youremail@mail.com">
+      <input type="tel" name="phone" id="custPhone" placeholder="Phone Number">
+
+      <label>Schedule Appointment</label>
+      <input type="date" name="date" id="bookDate" required>
+      <select name="time" required>
+        <option value="">-- Choose Time frame --</option>
+        <option value="08:30 AM">8:30 AM</option>
+        <option value="09:00 AM">9:00 AM</option>
+        <option value="09:30 AM">9:30 AM</option>
+        <option value="10:00 AM">10:00 AM</option>
+        <option value="10:30 AM">10:30 AM</option>
+        <option value="11:00 AM">11:00 AM</option>
+        <option value="12:00 PM">12:00 PM</option>
+        <option value="02:00 PM">2:00 PM</option>
+        <option value="04:00 PM">4:00 PM</option>
+      </select>
+
+      <!-- Hidden data to send price and service info to your email -->
+      <input type="hidden" name="service_selected" id="hiddenService">
+      <input type="hidden" name="estimated_price" id="hiddenPrice">
+
+      <button type="submit" class="btn btn-call" style="width: 100%; border-radius: 8px; margin-top: 10px;">Confirm & Book Now</button>
+      <p class="note">* Note: Mon-Sat, 8:00 AM - 6:00 PM. Closed Federal Holidays.</p>
     </form>
   </section>
 
-  <!-- Find Us Section -->
-  <section>
-    <h2>Find Us</h2>
-    <!-- Replace with actual Google Maps embed code -->
-    <iframe 
-      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3069.123456789!2d-102.725!3d40.122!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x87654321abcdef%3A0x123456789abcdef!2s810%20W%208th%20Ave%2C%20Yuma%2C%20CO%2080759!5e0!3m2!1sen!2sus!4v1700000000000"
-      width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
-    </iframe>
-    <p>📍 Address: 810 W 8th Ave, Yuma, CO 80759, United States</p>
-    <p>📞 Phone: <a href="tel:+19705349500" class="phone-link">(970) 534-9500</a></p>
-    <button class="message-btn" onclick="window.location.href='sms:+19705349500'">Message Us</button>
-  </section>
-
-  <!-- Pricing Section -->
-  <section id="pricing">
-    <h2>Pricing</h2>
-    <details>
-      <summary>Detailing Packages</summary>
-      <table>
-        <tr><th>Package</th><th>Price</th><th>Includes</th></tr>
-        <tr><td>Simple (Standard Vehicle)</td><td>$60</td><td>Exterior: Hand wash & dry. Interior: wipe clean, vacuum, spot-free windows.</td></tr>
-        <tr><td>Simple (SUV)</td><td>$75</td><td>Same as above for larger vehicles.</td></tr>
-      </table>
-    </details>
-  </section>
-
-  <!-- Tint Removal Section -->
-  <section id="tint-removal">
-    <h2>Tint Removal</h2>
-    <p>Select your vehicle type:</p>
-    
-    <button onclick="selectVehicle('coupe')">2-Door Coupe</button>
-    <button onclick="selectVehicle('sedan')">4-Door Sedan</button>
-    
-    <div id="vehicle-area"></div>
-    <div id="price-display">Total: $0.00</div>
-  </section>
-
-  <!-- Scripts -->
   <script>
-    function showEstimate() {
-      const service = document.getElementById("service").value;
-      let message = "";
-      const windshieldFields = document.getElementById("windshieldFields");
-      const additionalDetails = document.getElementById("additionalDetails");
+    const pricing = {
+        "Window Tint (Standard)": { "2 Door Coupe": 200, "4 Door Sedan": 260, "Compact SUV": 300, "Full Size SUV": 380, "Single Cab Truck": 170, "Crew Cab Truck": 260 },
+        "Ceramic Tint (Premium)": { "2 Door Coupe": 240, "4 Door Sedan": 320, "Compact SUV": 400, "Full Size SUV": 450, "Single Cab Truck": 220, "Crew Cab Truck": 300 },
+        "Detailing: Simple Package": { "Standard Vehicle": 60, "SUV / Large": 75 },
+        "Detailing: Gold": { "Standard Vehicle": 250, "SUV / Large": 300, "Single Cab Pickup": 220 },
+        "Detailing: Platinum": { "Standard Vehicle": 300, "SUV / Large": 380, "Single Cab Pickup": 280 }
+    };
 
-      windshieldFields.classList.add("hidden");
-      additionalDetails.classList.remove("hidden");
+    // Prevent booking in the past
+    document.getElementById('bookDate').min = new Date().toISOString().split('T')[0];
 
-      if (service === "windshield") {
-        message = "Windshield Replacement: Call for Quote. VIN may be needed for accuracy.";
-        windshieldFields.classList.remove("hidden");
-      }
-      if (service === "repair") message = "Rock Chip Repair: $60. Each additional chip: $30.";
-      if (service === "tint") message = "Auto Tint: $60 per window. Sedans from $200.";
-      if (service === "ceramicTint") message = "Ceramic Tint: $75 per window. Sedans from $240.";
-      if (service === "detailing") {
-        message = "Detailing Packages available. Scroll down for full options.";
-        document.getElementById("pricing").scrollIntoView({behavior: "smooth"});
-      }
-      if (service === "buff") message = "Buff (Scratch Removal): $300 Standard Vehicle, $400 SUV.";
-      if (service === "semiDetailing") message = "Semi Detailing: Simple $220 (No Sleeper), Platinum $400 (No Sleeper).";
-      if (service === "tintRemoval") message = "Tint Removal: $20 per side window, $40 rear window.";
-      if (service === "other") message = "Please describe
+    function updateFormLogic() {
+        const s = document.getElementById("service").value;
+        const vSec = document.getElementById("vehicleSection");
+        const cSec = document.getElementById("chipSection");
+        const pDisp = document.getElementById("price-display");
+        const vType = document.getElementById("vehicleType");
+
+        vSec.classList.add("hidden"); cSec.classList.add("hidden"); pDisp.classList.add("hidden");
+        vType.innerHTML = '<option value="">-- Select Vehicle --</option>';
+        document.getElementById("hiddenService").value = s;
+
+        if (s === "Rock Chip Repair") { 
+            cSec.classList.remove("hidden"); 
+            calculatePrice(); 
+        }
+        else if (s === "Windshield Replacement") { 
+            pDisp.classList.remove("hidden"); 
+            pDisp.innerText = "Quote: We will call/text you!"; 
+            document.getElementById("hiddenPrice").value = "Custom Quote Needed";
+        }
+        else if (pricing[s]) {
+            vSec.classList.remove("hidden");
+            for (let name in pricing[s]) {
+                let o = document.createElement("option"); o.value = name; o.innerText = name; vType.appendChild(o);
+            }
+        }
+    }
+
+    function calculatePrice() {
+        const s = document.getElementById("service").value;
+        const v = document.getElementById("vehicleType").value;
+        const pDisp = document.getElementById("price-display");
+        let total = 0;
+
+        if (s === "Rock Chip Repair") {
+            let chips = parseInt(document.getElementById("chipCount").value) || 1;
+            // Updated Pricing: $60 for first, $30 for each additional
+            total = 60 + ((chips - 1) * 30);
+        } else if (pricing[s] && v) {
+            total = pricing[s][v];
+        }
+
+        if (total > 0) {
+            pDisp.classList.remove("hidden");
+            pDisp.innerText = "Estimated Total: $" + total + ".00";
+            document.getElementById("hiddenPrice").value = "$" + total + ".00";
+        }
+    }
+  </script>
+</body>
+</html>
