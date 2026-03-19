@@ -92,17 +92,26 @@
     </div>
   </section>
 
+  <section>
+    <h2 class="highlight-heading">Come see us</h2
+   <iframe>
+   <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d12204.221119870674!2d-102.74479776620866!3d40.11877152742484!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8773b302017f915f%3A0x9a3f01c723138a7b!2sEscobar%20Auto%20Glass!5e0!3m2!1sen!2sus!4v1773900072503!5m2!1sen!2sus" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </iframe>
+    <p>📍 810 W. 8th Ave, Yuma, CO. 80759</p>
+  </section>
+
   <!-- BOOKING FORM -->
   <section id="booking">
     <h2 class="highlight-heading">Schedule Appointment</h2>
-    <!-- Replace 'yourdomain.com' with your actual website address -->
-      <input type="hidden" name="_next" value="https://yourdomain.com">
+    <!-- FORMSPREE LINK CONNECTED BELOW -->
+    <form action="https://formspree.io/f/mvzwbrkg" method="POST">
+      <input type="hidden" name="_next" value="https://formspree.io/f/mvzwbrkg">
       <form action="https://formspree.io" method="POST">
       <label>Full Name</label>
       <input type="text" name="name" required>
 
       <label>Contact Info</label>
-      <input type="email" name="email" placeholder="Email Address">
+      <input type="email" name="email" placeholder="Email Address" optional>
       <input type="tel" name="phone" placeholder="Phone Number" required>
 
       <label>Preferred Date & Time</label>
@@ -177,7 +186,7 @@
       }
       calculatePrice();
   }
-  
+
   function calculatePrice() {
       const s = document.getElementById("service").value;
       const pDisp = document.getElementById("price-display");
