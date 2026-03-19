@@ -8,44 +8,34 @@
     body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; margin: 0; padding: 0; text-align: center; color: #333; }
     header { background-color: #003366; color: white; padding: 30px 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
     section { padding: 30px 15px; max-width: 800px; margin: auto; }
-    h1 { margin: 0; font-size: 2.2em; }
-    
-    /* Bigger, Dark Blue Headings as requested */
-    .highlight-heading { 
-      font-size: 2.6em; 
-      color: #001f3f; /* Deep Dark Blue */
-      font-weight: 800;
-      margin-bottom: 25px;
-      text-transform: capitalize;
-    }
-
+    .highlight-heading { font-size: 2.6em; color: #001f3f; font-weight: 800; margin-bottom: 25px; text-transform: capitalize; }
     .btn-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 20px; }
     .btn { padding: 12px 25px; border: none; border-radius: 50px; cursor: pointer; font-size: 16px; font-weight: bold; text-decoration: none; color: white; transition: 0.3s; display: inline-flex; align-items: center; justify-content: center; }
     .btn-sms { background-color: #25D366; } 
     .btn-fb { background-color: #0084FF; } 
     .btn-call { background-color: #003366; }
-    .btn:hover { opacity: 0.8; transform: translateY(-2px); }
-    
     form { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: left; }
-    input, select, textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+    input, select, textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
     .hidden { display: none; }
-    #price-display { font-size: 24px; font-weight: bold; color: #003366; text-align: center; margin: 15px 0; border: 2px dashed #003366; padding: 15px; border-radius: 8px; }
-    .note { font-size: 0.85em; color: #666; font-style: italic; margin-top: -5px; }
+    #price-display { font-size: 24px; font-weight: bold; color: #003366; text-align: center; margin: 15px 0; border: 2px dashed #003366; padding: 15px; border-radius: 8px; background: #eef2f5; }
+    .note { font-size: 0.85em; color: #666; font-style: italic; margin-top: -2px; margin-bottom: 10px; }
+    #service-description { font-size: 0.95em; color: #444; background: #fff9c4; padding: 12px; border-radius: 8px; margin: 10px 0; border-left: 5px solid #fbc02d; }
   </style>
 </head>
 <body>
 
   <header>
     <h1>Escobar Auto Glass LLC</h1>
-    <p>Windshield Installation • Chip Repair • Car Wash • Detailing • Window Tint</p>
+    <p>Windshield Installation • Chip Repair • Detailing • Window Tint</p>
   </header>
 
+  <!-- CONTACT BUTTONS -->
   <section>
     <h2>Contact Us</h2>
     <div class="btn-container">
       <a href="tel:+19705349500" class="btn btn-call">📞 Call</a>
-      <a href="sms:+19705349500?&body=Hi Escobar Auto Glass, I'm interested in a quote for service!" class="btn btn-sms">💬 Text</a>
-      <a href="https://www.facebook.com/profile.php?id=100083192319444" target="_blank" class="btn btn-fb">🌀 Facebook</a>
+      <a href="sms:+19705349500?&body=Hi Escobar Auto Glass, I'm interested in a quote!" class="btn btn-sms">💬 Text</a>
+      <a href="https://www.facebook.com" target="_blank" class="btn btn-fb">🌀 Facebook</a>
     </div>
   </section>
 
@@ -53,10 +43,12 @@
   <section>
     <h2 class="highlight-heading">Fast FREE Quote</h2>
     <div style="background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: left;">
+      
       <label>Service Needed</label>
       <select id="service" onchange="updateFormLogic()" required>
         <option value="">-- Select Service --</option>
         <option value="Rock Chip Repair">Rock Chip Repair</option>
+        <option value="tintRemoval">Window Tint Removal</option>
         <option value="Windshield Replacement">Windshield Replacement</option>
         <option value="Window Tint (Standard)">Window Tint (Standard)</option>
         <option value="Ceramic Tint (Premium)">Ceramic Tint (Premium)</option>
@@ -65,6 +57,24 @@
         <option value="Detailing: Platinum">Detailing: Platinum</option>
       </select>
 
+      <div id="service-description" class="hidden"></div>
+
+      <!-- Tint Removal Logic -->
+      <div id="tintRemovalSection" class="hidden">
+        <label>Removal Type</label>
+        <select id="removalType" onchange="calculatePrice()">
+          <option value="side">Single Side Window</option>
+          <option value="rear">Rear Window</option>
+          <option value="coupe">Full 2-Door Coupe</option>
+          <option value="sedan">Full 4-Door Sedan</option>
+        </select>
+        <div id="removalQtyWrapper">
+          <label>Quantity</label>
+          <input type="number" id="removalCount" value="1" min="1" oninput="calculatePrice()">
+        </div>
+      </div>
+
+      <!-- Vehicle Type (for Tint/Detailing) -->
       <div id="vehicleSection" class="hidden">
         <label>Vehicle Size / Type</label>
         <select id="vehicleType" onchange="calculatePrice()">
@@ -72,6 +82,7 @@
         </select>
       </div>
 
+      <!-- Chip Repair Logic -->
       <div id="chipSection" class="hidden">
         <label>How many chips?</label>
         <input type="number" id="chipCount" value="1" min="1" oninput="calculatePrice()">
@@ -81,112 +92,117 @@
     </div>
   </section>
 
-  <section>
-    <h2 class="highlight-heading">Come see us</h2>
-    <iframe 
-      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3069.123456789!2d-102.722!3d40.122!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x87654321abcdef%3A0x123456789abcdef!2sEscobar%20Auto%20Glass%20LLC%2C%20Yuma%2C%20CO!5e0!3m2!1sen!2sus!4v1700000000000"
-      width="100%" height="400" style="border:0; border-radius:15px;" allowfullscreen="" loading="lazy">
-    </iframe>
-    <p>📍 810 W. 8th Ave, Yuma CO 80759</p>
-  </section>
-
-  <!-- BOOKING SECTION -->
+  <!-- BOOKING FORM -->
   <section id="booking">
-    <h2 class="highlight-heading">Schedule an Appointment</h2>
-    <!-- FORMSPREE LINK CONNECTED BELOW -->
-    <form action="https://formspree.io/f/mvzwbrkg" method="POST">
-      <label>Name</label>
-      <input type="text" name="name" placeholder="Name" required>
+    <h2 class="highlight-heading">Schedule Appointment</h2>
+    <!-- Replace 'yourdomain.com' with your actual website address -->
+      <input type="hidden" name="_next" value="https://yourdomain.com">
+      <form action="https://formspree.io" method="POST">
+      <label>Full Name</label>
+      <input type="text" name="name" required>
 
-      <label>Contact</label>
-      <p class="note">Please provide at least one.</p>
-      <input type="email" name="email" id="custEmail" placeholder="youremail@mail.com">
-      <input type="tel" name="phone" id="custPhone" placeholder="Phone Number">
+      <label>Contact Info</label>
+      <input type="email" name="email" placeholder="Email Address">
+      <input type="tel" name="phone" placeholder="Phone Number" required>
 
-      <label>Schedule Appointment</label>
-      <input type="date" name="date" id="bookDate" required>
+      <label>Preferred Date & Time</label>
+      <input type="date" name="date" required>
       <select name="time" required>
         <option value="">-- Choose Time frame --</option>
-        <option value="08:30 AM">8:30 AM</option>
-        <option value="09:00 AM">9:00 AM</option>
-        <option value="09:30 AM">9:30 AM</option>
-        <option value="10:00 AM">10:00 AM</option>
-        <option value="10:30 AM">10:30 AM</option>
-        <option value="11:00 AM">11:00 AM</option>
-        <option value="12:00 PM">12:00 PM</option>
-        <option value="02:00 PM">2:00 PM</option>
-        <option value="04:00 PM">4:00 PM</option>
+        <option value="Morning (8:30 AM - 11:30 AM)">Morning</option>
+        <option value="Afternoon (12:00 PM - 5:00 PM)">Afternoon</option>
       </select>
 
-      <!-- Hidden data to send price and service info to your email -->
+      <label>Vehicle Details & Notes</label>
+      <p class="note">Year/Make/Model? Is the tint bubbling? Excessive mud or pet hair?</p>
+      <textarea name="customer_notes" rows="3" placeholder="Example: 2018 Honda Civic, tint is bubbling on rear window."></textarea>
+
+      <!-- Hidden data for Formspree -->
       <input type="hidden" name="service_selected" id="hiddenService">
       <input type="hidden" name="estimated_price" id="hiddenPrice">
 
       <button type="submit" class="btn btn-call" style="width: 100%; border-radius: 8px; margin-top: 10px;">Confirm & Book Now</button>
-      <p class="note">* Note: Mon-Sat, 8:00 AM - 6:00 PM. Closed Federal Holidays.</p>
+      <p class="note" style="text-align:center;">* Mon-Sat, 8:00 AM - 6:00 PM.</p>
     </form>
   </section>
 
-  <script>
-    const pricing = {
-        "Window Tint (Standard)": { "2 Door Coupe": 200, "4 Door Sedan": 260, "Compact SUV": 300, "Full Size SUV": 380, "Single Cab Truck": 170, "Crew Cab Truck": 260 },
-        "Ceramic Tint (Premium)": { "2 Door Coupe": 240, "4 Door Sedan": 320, "Compact SUV": 400, "Full Size SUV": 450, "Single Cab Truck": 220, "Crew Cab Truck": 300 },
-        "Detailing: Simple Package": { "Standard Vehicle": 60, "SUV / Large": 75 },
-        "Detailing: Gold": { "Standard Vehicle": 250, "SUV / Large": 300, "Single Cab Pickup": 220 },
-        "Detailing: Platinum": { "Standard Vehicle": 300, "SUV / Large": 380, "Single Cab Pickup": 280 }
-    };
+<script>
+  const pricing = {
+      "Window Tint (Standard)": { "2 Door Coupe": 200, "4 Door Sedan": 260, "Compact SUV": 300, "4 Door Hatchback": 300, "Full Size SUV": 380, "Single Cab Truck": 170, "Extended Cab Truck": 210, "Crew Cab Truck": 260 },
+      "Ceramic Tint (Premium)": { "2 Door Coupe": 240, "4 Door Sedan": 320, "Compact SUV": 400, "4 Door Hatchback": 400, "Full Size SUV": 450, "Single Cab Truck": 220, "Extended Cab Truck": 270, "Crew Cab Truck": 300 },
+      "Detailing: Simple Package": { "Standard Vehicle": 60, "SUV / Large": 75 },
+      "Detailing: Gold": { "Single Cab Pickup": 220, "Standard Vehicle": 250, "SUV / Large": 300 },
+      "Detailing: Platinum": { "Single Cab Pickup": 280, "Standard Vehicle": 300, "SUV / Large": 380 }
+  };
 
-    // Prevent booking in the past
-    document.getElementById('bookDate').min = new Date().toISOString().split('T')[0];
+  const descriptions = {
+      "Rock Chip Repair": "Restores structural integrity and prevents cracks from spreading.",
+      "tintRemoval": "Professional removal of old, bubbling, or purple film. ($20/side, $40/rear).",
+      "Windshield Replacement": "Price varies by vehicle features (sensors/cameras). We will call with a final quote.",
+      "Window Tint (Standard)": "Standard Carbon film for heat rejection and privacy.",
+      "Ceramic Tint (Premium)": "Advanced Ceramic film for maximum heat and UV protection.",
+      "Detailing: Simple Package": "Hand wash, wheels, tire shine, interior vacuum, and light wipe down.",
+      "Detailing: Gold": "Full wash/dry, clay bar, deep interior clean, steam, and leather conditioning.",
+      "Detailing: Platinum": "Total restoration: Interior/Exterior, engine bay, wax, and odor removal."
+  };
 
-    function updateFormLogic() {
-        const s = document.getElementById("service").value;
-        const vSec = document.getElementById("vehicleSection");
-        const cSec = document.getElementById("chipSection");
-        const pDisp = document.getElementById("price-display");
-        const vType = document.getElementById("vehicleType");
+  function updateFormLogic() {
+      const s = document.getElementById("service").value;
+      const vSec = document.getElementById("vehicleSection");
+      const cSec = document.getElementById("chipSection");
+      const trSec = document.getElementById("tintRemovalSection");
+      const pDisp = document.getElementById("price-display");
+      const dBox = document.getElementById("service-description");
+      const vType = document.getElementById("vehicleType");
 
-        vSec.classList.add("hidden"); cSec.classList.add("hidden"); pDisp.classList.add("hidden");
-        vType.innerHTML = '<option value="">-- Select Vehicle --</option>';
-        document.getElementById("hiddenService").value = s;
+      // Reset
+      [vSec, cSec, trSec, pDisp, dBox].forEach(el => el.classList.add("hidden"));
+      vType.innerHTML = '<option value="">-- Select Option --</option>';
+      document.getElementById("hiddenService").value = s;
 
-        if (s === "Rock Chip Repair") { 
-            cSec.classList.remove("hidden"); 
-            calculatePrice(); 
-        }
-        else if (s === "Windshield Replacement") { 
-            pDisp.classList.remove("hidden"); 
-            pDisp.innerText = "Quote: We will call/text you!"; 
-            document.getElementById("hiddenPrice").value = "Custom Quote Needed";
-        }
-        else if (pricing[s]) {
-            vSec.classList.remove("hidden");
-            for (let name in pricing[s]) {
-                let o = document.createElement("option"); o.value = name; o.innerText = name; vType.appendChild(o);
-            }
-        }
-    }
+      if (descriptions[s]) {
+          dBox.innerText = descriptions[s];
+          dBox.classList.remove("hidden");
+      }
 
-    function calculatePrice() {
-        const s = document.getElementById("service").value;
-        const v = document.getElementById("vehicleType").value;
-        const pDisp = document.getElementById("price-display");
-        let total = 0;
+      if (s === "Rock Chip Repair") {
+          cSec.classList.remove("hidden");
+      } else if (s === "tintRemoval") {
+          trSec.classList.remove("hidden");
+      } else if (pricing[s]) {
+          vSec.classList.remove("hidden");
+          for (let type in pricing[s]) {
+              vType.innerHTML += `<option value="${type}">${type}</option>`;
+          }
+      }
+      calculatePrice();
+  }
+  
+  function calculatePrice() {
+      const s = document.getElementById("service").value;
+      const pDisp = document.getElementById("price-display");
+      let total = 0;
 
-        if (s === "Rock Chip Repair") {
-            let chips = parseInt(document.getElementById("chipCount").value) || 1;
-            // Updated Pricing: $60 for first, $30 for each additional
-            total = 60 + ((chips - 1) * 30);
-        } else if (pricing[s] && v) {
-            total = pricing[s][v];
-        }
+      if (s === "Rock Chip Repair") {
+          total = document.getElementById("chipCount").value * 40;
+      } else if (s === "tintRemoval") {
+          const type = document.getElementById("removalType").value;
+          const qty = document.getElementById("removalCount").value || 1;
+          const qtyWrap = document.getElementById("removalQtyWrapper");
+          if (type === "side") { total = qty * 20; qtyWrap.style.display="block"; }
+          else if (type === "rear") { total = qty * 40; qtyWrap.style.display="block"; }
+          else { total = (type === "coupe") ? 80 : 100; qtyWrap.style.display="none"; }
+      } else if (pricing[s]) {
+          const v = document.getElementById("vehicleType").value;
+          total = pricing[s][v] || 0;
+      }
 
-        if (total > 0) {
-            pDisp.classList.remove("hidden");
-            pDisp.innerText = "Estimated Total: $" + total + ".00";
-            document.getElementById("hiddenPrice").value = "$" + total + ".00";
-        }
-    }
-  </script>
+      if (total > 0 || s === "Windshield Replacement") {
+          pDisp.classList.remove("hidden");
+          pDisp.innerText = (s === "Windshield Replacement") ? "Estimated Total: Contact for Quote" : "Estimated Total: $" + total.toFixed(2);
+          document.getElementById("hiddenPrice").value = pDisp.innerText;
+      }
+  }
+</script>
 </body>
 </html>
