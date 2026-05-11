@@ -376,10 +376,11 @@ if (fileInput) {
 }
 
 // 6. SUBMISSION
-async function submitToGoogle() {	
+async function submitToGoogle() {    
     const status = document.getElementById('status-msg');
     const form = document.getElementById('appointmentForm');
     
+    // Check form validity before proceeding
     if (!form.checkValidity()) {
         form.reportValidity();
         return;
@@ -391,16 +392,19 @@ async function submitToGoogle() {
         const fInput = document.getElementById('fileInput');
         let imageData = null;
 
+        // Handle Image Conversion
         if (fInput && fInput.files.length > 0) {
             const file = fInput.files[0];
-            const base64Data = await new Promise((resolve) => {
+            const base64Data = await new Promise((resolve, reject) => {
                 const reader = new FileReader();
                 reader.onload = () => resolve(reader.result.split(',')[1]);
+                reader.onerror = (err) => reject(err);
                 reader.readAsDataURL(file);
             });
             imageData = { data: base64Data, name: file.name, type: file.type };
         }
 
+        // Construct Payload
         const payload = {
             name: document.querySelector('input[name="name"]').value,
             phone: document.querySelector('input[name="phone"]').value,
@@ -412,20 +416,27 @@ async function submitToGoogle() {
             image: imageData
         };
 
-        await fetch("https://script.google.com/macros/s/AKfycbx6dTvykJgusxgbdmd3_zrMpoq6jZsKWi_HAZQZASJrb3wr6PrAXHOMgKD4jJtheVL0/exec", {
+        // Send Data
+        // Note: 'no-cors' is used because Google Script redirects, which standard fetch cors mode blocks.
+        await fetch("https://script.google.com/macros/s/AKfycbx0yk8kZYQm7CewhudqsJzZpdkxrcmCUbnDVf-Z0PXejkqQVdwEUqozpEduIbaFvLCJ/exec", {
             method: 'POST',
-            mode: 'no-cors',
+            mode: 'no-cors', 
+            headers: {
+                'Content-Type': 'text/plain',
+            },
             body: JSON.stringify(payload)
         });
 
+        // Success State
         status.innerText = isSpanish ? "¡Gracias! Nuestro equipo le llamará pronto. ✅" : "Thank you, someone from our team will call you! ✅";
         
+        // Short delay to allow the user to see the success message
         setTimeout(() => { 
             window.location.href = "https://mrinterpreter.github.io/EscobarAutoGlassLLC/thanks.html"; 
-        }, 2500);
+        }, 2000);
 
     } catch (e) {
-        console.error(e);
+        console.error("Submission Error:", e);
         status.innerText = isSpanish ? "Error. Por favor llame al (970) 534-9500" : "Error. Please call (970) 534-9500";
     }
 }
