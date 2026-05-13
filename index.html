@@ -171,11 +171,20 @@
 
         <div id="price-display" class="hidden">Estimated Total: $0.00</div>
 
-        <div class="vehicle-grid">
-            <div><label>Year</label><input type="text" name="year" required></div>
-            <div><label>Make</label><input type="text" name="make" required></div>
-            <div><label>Model</label><input type="text" name="model" required></div>
+      <div class="vehicle-grid">
+           <div>
+                 <label>Year</label>
+                 <input type="text" name="year" required="">
+         </div>
+         <div>
+              <label>Make</label>
+              <input type="text" name="make" required="">
         </div>
+        <div>
+              <label>Model</label>
+              <input type="text" name="model" required="">
+      </div>
+</div>
 
         <label>Upload VIN / Damage Photo</label>
         <input type="file" id="fileInput" name="attachment" accept="image/*">
@@ -300,11 +309,11 @@ function calculatePrice() {
         } else {
             pDisp.style.display = "block";
             if (s === "Windshield Replacement") {
-                pDisp.innerText = isSpanish ? "Total Estimado: Requiere cotización personalizada" : "Estimated Total: Custom Quote Needed";
+                pDisp.innerText = isSpanish ? "Costo Total: Requiere cotización personalizada" : "Estimated Total: Custom Quote Needed";
             } else if (s === "Accessory Installation") {
                 pDisp.innerText = "Estimated Total: $70.00 / hr";
             } else {
-                pDisp.innerText = (isSpanish ? "Total Estimado: $" : "Estimated Total: $") + total.toFixed(2);
+                pDisp.innerText = (isSpanish ? "Cotizacion del Costo Total: $" : "Estimated Total: $") + total.toFixed(2);
             }
         }
     }
@@ -418,7 +427,7 @@ async function submitToGoogle() {
 
         // Send Data
         // Note: 'no-cors' is used because Google Script redirects, which standard fetch cors mode blocks.
-        await fetch("https://script.google.com/macros/s/AKfycbxr-8LltG2R4iMbsyNXBf-U9MdTl41AlujMO2VcEslYvw9fiYgEzzKxMlvBHrv9Xoqw/exec", {
+        await fetch("https://script.google.com/macros/s/AKfycbzDbI4HQy53-9vjTvITnp8ZKYYqoSLVeZ1Wbf7_9ndU50n-UlLVEFRbhPK4jTeWRtpU/exec", {
             method: 'POST',
             mode: 'no-cors', 
             headers: {
