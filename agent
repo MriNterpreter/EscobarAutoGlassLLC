@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Agent - Escobar Auto Glass</title>
+    <!-- Add EmailJS library -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <style>
+        :root { --primary-color: #bf0a30; --bg-light: #f0f2f5; }
+        body { margin: 0; padding: 0; background: black; display: flex; justify-content: center; align-items: center; min-height: 100vh; font-family: 'Segoe UI', sans-serif; }
+        body::before { content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background-image: radial-gradient(circle, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.8) 100%), url("eaglogo.png"); background-size: cover; background-position: center; animation: background3DSpin 20s infinite linear; }
+        @keyframes background3DSpin { 0% { transform: perspective(1000px) rotateX(15deg) rotateY(0deg) scale(1.15); } 100% { transform: perspective(1000px) rotateX(15deg) rotateY(360deg) scale(1.15); } }
+        .agent-card { position: fixed; bottom: 30px; right: 20px; width: 350px; height: 550px; background-color: rgba(0, 0, 0, 0.9); color: white; border-radius: 15px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 10000; border: 1px solid #333; backdrop-filter: blur(10px); }
+        .header-content { padding: 20px; text-align: center; background: linear-gradient(rgba(191, 10, 48, 0.4) 0%, rgba(0, 0, 0, 0) 100%); position: relative; }
+        #close-agent-btn { position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 24px; cursor: pointer; color: #fff; }
+        #lang-toggle { position: absolute; top: 15px; left: 15px; background: #fff; border: none; padding: 4px 8px; border-radius: 6px; font-size: 11px; cursor: pointer; font-weight: bold; color: black; }
+        .avatar-img { width: 70px; height: 70px; border-radius: 50%; border: 3px solid var(--primary-color); margin-bottom: 8px; }
+        #agent-name { margin: 0; font-size: 1.2rem; }
+        #agent-title { color: var(--primary-color); font-weight: bold; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; }
+        #services-container { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
+        .bubble { padding: 10px 14px; max-width: 85%; font-size: 14px; line-height: 1.4; border-radius: 18px; animation: pop 0.3s ease forwards; }
+        .agent-bubble { background: var(--bg-light); color: #333; align-self: flex-start; border-bottom-left-radius: 4px; }
+        .user-bubble { background: var(--primary-color); color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; }
+        .service-opt { background: rgba(255, 255, 255, 0.1); border: 1px solid var(--primary-color); color: white; align-self: center; cursor: pointer; width: 90%; text-align: center; }
+        .service-opt:hover { background: var(--primary-color); }
+        .input-wrapper { display: flex; gap: 5px; margin-top: 5px; }
+        .chat-input { flex: 1; padding: 8px; border-radius: 15px; border: 1px solid #444; background: #222; color: white; }
+        .chat-btn { padding: 8px 15px; border-radius: 15px; border: none; background: var(--primary-color); color: white; cursor: pointer; }
+        @keyframes pop { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+    <div class="agent-card">
+        <div class="header-content">
+            <button id="lang-toggle" onclick="toggleLanguage()">ES</button>
+            <button id="close-agent-btn">×</button>
+            <img src="eaglogo1.png" class="avatar-img" alt="Agent">
+            <h2 id="agent-name">Alex</h2>
+            <div id="agent-title">Service Expert</div>
+        </div>
+        <div id="services-container"></div>
+    </div>
+
+    <script>
+        // --- 1. EMAILJS CONFIGURATION ---
+        // Replace these with your IDs from EmailJS.com
+        const EMAILJS_PUBLIC_KEY = "YOUR_PUBLIC_KEY";
+        const EMAILJS_SERVICE_ID = "YOUR_SERVICE_ID";
+        const EMAILJS_TEMPLATE_ID = "YOUR_TEMPLATE_ID";
+
+        emailjs.init(EMAILJS_PUBLIC_KEY);
+
+        let currentLang = 'en';
+        let leadData = { service: '', details: '', contactMethod: '', contactInfo: '' };
+
+        const translations = {
+            en: {
+                welcome: "Hi! Select a service for a fast quote:",
+                rockChip: "Rock Chips are best fixed early, is the chip smaller than a quarter?",
+                howMany: "How many chips does your windshield have?",
+                replaceAdvise: "Considering your safety, it seems like you might need to have your windshield replaced.",
+                knowWindshields: "Would you like to know about our windshields?",
+                contChip: "Continue with Chip repair?",
+                vinRec: "For accuracy we recommend providing your vehicles VIN#.",
+                knowVin: "Do you know your vehicle's VIN#?",
+                schedule: "Would you like to schedule an appointment or request a call back?",
+                thanks: "Thank you! Our expert Alex will reach out to you shortly.",
+                yes: "Yes", no: "No",
+                typeVin: "Type VIN#", uploadVin: "Upload photo of VIN#",
+                back: "Go Back to Main Menu",
+                services: ["Rock Chip Repair", "Window Tint Removal", "Windshield Replacement", "Window Tint (Standard)", "Ceramic Tint (Premium)", "Detailing: Gold", "Headlight Restoration", "Accessory Installation"]
+            },
+            es: {
+                welcome: "¡Hola! Selecciona un servicio para una cotización:",
+                rockChip: "Las picaduras se reparan mejor pronto. ¿La picadura es más pequeña que una moneda de 25 centavos?",
+                howMany: "¿Cuántas picaduras tiene su parabrisas?",
+                replaceAdvise: "Por su seguridad, parece que podría necesitar un reemplazo de parabrisas.",
+                knowWindshields: "¿Le gustaría saber sobre nuestros parabrisas?",
+                contChip: "¿Continuar con la reparación de picaduras?",
+                vinRec: "Para mayor precisión, recomendamos proporcionar el VIN# de su vehículo.",
+                knowVin: "¿Conoce el VIN# de su vehículo?",
+                schedule: "¿Le gustaría programar una cita o solicitar que le devolvamos la llamada?",
+                thanks: "¡Gracias! Nuestro experto Alex se comunicará con usted pronto.",
+                yes: "Sí", no: "No",
+                typeVin: "Escribir VIN#", uploadVin: "Subir foto de VIN#",
+                back: "Volver al Menú Principal",
+                services: ["Reparación de Picaduras", "Remoción de Tinte", "Reemplazo de Parabrisas", "Tinte de Ventana (Estándar)", "Tinte Cerámico (Premium)", "Detailing: Oro", "Restauración de Faros", "Instalación de Accesorios"]
+            }
+        };
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'es' : 'en';
+            document.getElementById('lang-toggle').textContent = currentLang === 'en' ? 'ES' : 'EN';
+            document.getElementById('services-container').innerHTML = '';
+            initChat();
+        }
+
+        function appendMessage(type, text) {
+            const container = document.getElementById('services-container');
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `bubble ${type}-bubble`;
+            msgDiv.textContent = text;
+            container.appendChild(msgDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function appendOptions(options, callback) {
+            const container = document.getElementById('services-container');
+            const wrapper = document.createElement('div');
+            wrapper.style.display = 'flex'; wrapper.style.flexDirection = 'column'; wrapper.style.gap = '8px';
+            options.forEach(optText => {
+                const btn = document.createElement('div');
+                btn.className = 'bubble service-opt';
+                btn.textContent = optText;
+                btn.onclick = () => { wrapper.remove(); appendMessage('user', optText); callback(optText); };
+                wrapper.appendChild(btn);
+            });
+            container.appendChild(wrapper);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function appendTextInput(placeholder, callback) {
+            const container = document.getElementById('services-container');
+            const wrapper = document.createElement('div');
+            wrapper.className = 'input-wrapper';
+            const input = document.createElement('input');
+            input.className = 'chat-input'; input.placeholder = placeholder;
+            const btn = document.createElement('button');
+            btn.className = 'chat-btn'; btn.textContent = 'Send';
+            btn.onclick = () => { if(input.value.trim()){ wrapper.remove(); appendMessage('user', input.value); callback(input.value); }};
+            wrapper.appendChild(input); wrapper.appendChild(btn);
+            container.appendChild(wrapper);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function sendEmailNotification() {
+            // This sends the data to your email via EmailJS
+            emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+                service: leadData.service,
+                details: leadData.details,
+                contact_method: leadData.contactMethod,
+                contact_info: leadData.contactInfo,
+                language: currentLang
+            }).then(() => console.log("Email Sent!")).catch(err => console.error("Email Error:", err));
+        }
+
+        function handleServiceClick(serviceName) {
+            document.querySelectorAll('.service-opt').forEach(opt => opt.remove());
+            appendMessage('user', serviceName);
+            leadData.service = serviceName;
+            const t = translations[currentLang];
+            
+            if (serviceName.includes("Rock Chip") || serviceName.includes("Picaduras")) {
+                setTimeout(() => {
+                    appendMessage('agent', t.rockChip);
+                    appendOptions([t.yes, t.no], (ans) => {
+                        if (ans === t.yes) askChipCount();
+                        else { appendMessage('agent', t.replaceAdvise); askFinalAction(); }
+                    });
+                }, 800);
+            } else {
+                setTimeout(() => {
+                    appendMessage('agent', `Great! / ¡Genial! ${serviceName}.`);
+                    askFinalAction();
+                }, 800);
+            }
+        }
+
+        function askChipCount() {
+            const t = translations[currentLang];
+            appendMessage('agent', t.howMany);
+            appendOptions(['1', '2', '3', '4'], (count) => {
+                leadData.details = `Chips: ${count}`;
+                if (count === '4') {
+                    appendMessage('agent', t.replaceAdvise);
+                    appendOptions([t.knowWindshields, t.contChip], (choice) => {
+                        if (choice === t.knowWindshields) startVinFlow();
+                        else askFinalAction();
+                    });
+                } else {
+                    const price = count === '1' ? '$60' : (count === '2' ? '$90' : '$120');
+                    appendMessage('agent', `Estimate: ${price} USD`);
+                    askFinalAction();
+                }
+            });
+        }
+
+        function startVinFlow() {
+            const t = translations[currentLang];
+            appendMessage('agent', t.vinRec);
+            appendMessage('agent', t.knowVin);
+            appendOptions([t.yes, t.no], (ans) => {
+                if (ans === t.yes) {
+                    appendOptions([t.typeVin, t.uploadVin], (method) => {
+                        if (method === t.typeVin) appendTextInput(t.typeVin, (val) => { leadData.details += ` VIN: ${val}`; askFinalAction(); });
+                        else askFinalAction(); // Image logic would go here
+                    });
+                } else askFinalAction();
+            });
+        }
+
+        function askFinalAction() {
+            const t = translations[currentLang];
+            appendMessage('agent', t.schedule);
+            appendOptions(['Schedule', 'Call Back'], (action) => {
+                leadData.contactMethod = action;
+                appendTextInput('Phone or Email', (info) => {
+                    leadData.contactInfo = info;
+                    appendMessage('agent', t.thanks);
+                    sendEmailNotification();
+                    setTimeout(() => appendOptions([t.back], () => { document.getElementById('services-container').innerHTML = ''; initChat(); }), 2000);
+                });
+            });
+        }
+
+        function initChat() {
+            const t = translations[currentLang];
+            appendMessage('agent', t.welcome);
+            t.services.forEach(s => {
+                const opt = document.createElement('div');
+                opt.className = 'bubble service-opt'; opt.textContent = s;
+                opt.onclick = () => handleServiceClick(s);
+                document.getElementById('services-container').appendChild(opt);
+            });
+        }
+        document.addEventListener('DOMContentLoaded', initChat);
+    </script>
+</body>
+</html>
